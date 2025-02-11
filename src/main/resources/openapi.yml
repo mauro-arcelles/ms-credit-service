@@ -1,0 +1,206 @@
+openapi: 3.0.0
+info:
+  title: Credit Service API
+  version: 1.0.0
+  description: API for managing bank customers
+
+servers:
+  - url: http://localhost/api/v1
+
+paths:
+  /credits/credit:
+    post:
+      operationId: createCredit
+      summary: Create a new customer credit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCreateRequest'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
+  /credits/credit-card:
+    post:
+      operationId: createCreditCredit
+      summary: Create a new customer credit card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardCreateRequest'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
+  /credits/credit-card/{id}:
+    patch:
+      operationId: updateCreditCard
+      summary: Update credit card info
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardPatchRequest'
+      responses:
+        '200':
+          description: Credit card updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
+  /credits/credit-card/by-card-number/{cardNumber}:
+    get:
+      operationId: getCreditCardByCardNumber
+      summary: Get a credit card by a card number
+      parameters:
+        - name: cardNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Credit card found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardResponse'
+        '404':
+          description: Credit card not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
+components:
+  schemas:
+    CreditCreateRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+        interestRate:
+          type: number
+        term:
+          type: integer
+        monthlyPayment:
+          type: number
+      required:
+        - customerId
+        - amount
+        - interestRate
+        - term
+        - monthlyPayment
+
+    CreditResponse:
+      type: object
+      properties:
+        clientId:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+        interestRate:
+          type: number
+        term:
+          type: integer
+        monthlyPayment:
+          type: number
+
+    CreditCardCreateRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+        creditLimit:
+          type: number
+      required:
+        - customerId
+        - creditLimit
+
+    CreditCardPatchRequest:
+      type: object
+      properties:
+        usedAmount:
+          type: number
+        creditLimit:
+          type: number
+
+    CreditCardResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        creditLimit:
+          type: number
+        cardNumber:
+          type: string
+        usedAmount:
+          type: number
+        creditCardStatus:
+          type: string
+
+    CustomerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        documentNumber:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        type:
+          type: string
+
+    ResponseBase:
+      type: object
+      properties:
+        message:
+          type: string
