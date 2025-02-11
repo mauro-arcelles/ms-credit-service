@@ -1,4 +1,4 @@
-package com.project1.ms_credit_service.business;
+package com.project1.ms_credit_service.business.adapter;
 
 import com.project1.ms_credit_service.exception.CustomerNotFoundException;
 import com.project1.ms_credit_service.model.CustomerResponse;

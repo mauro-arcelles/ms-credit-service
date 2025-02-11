@@ -1,5 +1,6 @@
 package com.project1.ms_credit_service.business;
 
+import com.project1.ms_credit_service.business.adapter.CustomerService;
 import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.model.*;
 import com.project1.ms_credit_service.repository.CreditRepository;

@@ -1,5 +1,6 @@
 package com.project1.ms_credit_service.business;
 
+import com.project1.ms_credit_service.business.adapter.CustomerService;
 import com.project1.ms_credit_service.exception.CreditCardNotFoundException;
 import com.project1.ms_credit_service.model.CreditCardCreateRequest;
 import com.project1.ms_credit_service.model.CreditCardResponse;
