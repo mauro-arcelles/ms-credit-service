@@ -20,3 +20,5 @@ spring.config.import=optional:configserver:http://localhost:8888
 
 ## Swagger
 http://localhost:8093/swagger-ui.html
+
+![Uploading ms-credit-service-2025-02-11-233656.png…]()
