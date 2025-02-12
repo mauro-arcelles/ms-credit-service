@@ -1,10 +1,13 @@
 package com.project1.ms_credit_service.business;
 
 import com.project1.ms_credit_service.business.adapter.CustomerService;
+import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.exception.CreditCardNotFoundException;
 import com.project1.ms_credit_service.model.CreditCardCreateRequest;
 import com.project1.ms_credit_service.model.CreditCardResponse;
 import com.project1.ms_credit_service.model.CreditCardPatchRequest;
+import com.project1.ms_credit_service.model.CustomerResponse;
+import com.project1.ms_credit_service.model.entity.CustomerStatus;
 import com.project1.ms_credit_service.repository.CreditCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +29,17 @@ public class CreditCardServiceImpl implements CreditCardService {
     public Mono<CreditCardResponse> createCreditCard(Mono<CreditCardCreateRequest> request) {
         return request
                 .flatMap(req ->
-                        customerService.getCustomerById(req.getCustomerId())
+                        this.validateCustomerAvailability(req)
                                 .map(customer -> creditCardMapper.getCreditCardCreationEntity(req, customer.getType()))
                 )
                 .flatMap(creditCardRepository::save)
                 .map(creditCardMapper::getCreditCardResponse);
+    }
+
+    private Mono<CustomerResponse> validateCustomerAvailability(CreditCardCreateRequest request) {
+        return customerService.getCustomerById(request.getCustomerId())
+                .filter(customerResponse -> CustomerStatus.ACTIVE.toString().equals(customerResponse.getStatus()))
+                .switchIfEmpty(Mono.error(new BadRequestException("Customer has INACTIVE status")));
     }
 
     @Override
