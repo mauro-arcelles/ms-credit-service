@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -40,5 +41,10 @@ public class CreditApiDelegateImpl implements CreditsApiDelegate {
     @Override
     public Mono<ResponseEntity<CreditCardResponse>> updateCreditCard(String id, Mono<CreditCardPatchRequest> patchCreditCardRequest, ServerWebExchange exchange) {
         return creditCardService.updateCreditCard(id, patchCreditCardRequest).map(ResponseEntity::ok);
+    }
+
+    @Override
+    public Mono<ResponseEntity<Flux<CreditCardResponse>>> getCreditCardsByCustomerId(String customerId, ServerWebExchange exchange) {
+        return Mono.just(ResponseEntity.ok(creditCardService.getCreditCardsByCustomerId(customerId)));
     }
 }
