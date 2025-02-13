@@ -19,8 +19,10 @@ public class Credit {
     private String id;
     private String customerId;
     private BigDecimal amount;
-    private String status;
+    private CreditStatus status;
     private BigDecimal interestRate;
-    private Integer term;
+    private Integer termInMonths;
     private BigDecimal monthlyPayment;
+    private BigDecimal amountPaid;
+    private BigDecimal totalAmount;
 }

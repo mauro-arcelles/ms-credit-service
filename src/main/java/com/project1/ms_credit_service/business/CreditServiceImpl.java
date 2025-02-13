@@ -3,6 +3,7 @@ package com.project1.ms_credit_service.business;
 import com.project1.ms_credit_service.business.adapter.CustomerService;
 import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.model.*;
+import com.project1.ms_credit_service.model.entity.Credit;
 import com.project1.ms_credit_service.repository.CreditRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,23 @@ public class CreditServiceImpl implements CreditService {
                                 .flatMap(customer -> validatePersonalCustomerCredit(customer, req))
                 )
                 .map(creditMapper::getCreditCreationEntity)
+                .flatMap(creditRepository::save)
+                .map(creditMapper::getCreditResponse);
+    }
+
+    @Override
+    public Mono<CreditResponse> getCreditById(String id) {
+        return creditRepository.findById(id)
+                .switchIfEmpty(Mono.error(new BadRequestException("CREDIT not found with id: " + id)))
+                .map(creditMapper::getCreditResponse);
+    }
+
+    @Override
+    public Mono<CreditResponse> updateCreditById(String id, Mono<CreditPatchRequest> request) {
+        return creditRepository.findById(id)
+                .flatMap(credit ->
+                        request.map(req -> creditMapper.getCreditUpdateEntity(req, credit))
+                )
                 .flatMap(creditRepository::save)
                 .map(creditMapper::getCreditResponse);
     }

@@ -32,6 +32,59 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseBase'
 
+  /credits/credit/{id}:
+    get:
+      operationId: getCreditById
+      summary: Get a credit by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Credit card updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditResponse'
+        '404':
+          description: Credit not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+    patch:
+      operationId: updateCreditById
+      summary: Update credit by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditPatchRequest'
+      responses:
+        '200':
+          description: Credit updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditResponse'
+        '404':
+          description: Credit not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
+
   /credits/credit-card:
     post:
       operationId: createCreditCredit
@@ -149,16 +202,13 @@ components:
           type: string
         interestRate:
           type: number
-        term:
+        termInMonths:
           type: integer
-        monthlyPayment:
-          type: number
       required:
         - customerId
         - amount
         - interestRate
-        - term
-        - monthlyPayment
+        - termInMonths
 
     CreditResponse:
       type: object
@@ -171,9 +221,13 @@ components:
           type: string
         interestRate:
           type: number
-        term:
+        termInMonths:
           type: integer
         monthlyPayment:
+          type: number
+        amountPaid:
+          type: number
+        totalAmount:
           type: number
 
     CreditCardCreateRequest:
@@ -194,6 +248,14 @@ components:
           type: number
         creditLimit:
           type: number
+
+    CreditPatchRequest:
+      type: object
+      properties:
+        amountPaid:
+          type: number
+      required:
+        - amountPaid
 
     CreditCardResponse:
       type: object
