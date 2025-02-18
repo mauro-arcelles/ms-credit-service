@@ -12,10 +12,26 @@ Spring Boot Webflux microservice that handles credit operations (credits, credit
 - Swagger ui
 
 ## Configuration
-Service connects to Config Server for properties:
+Service connects to Config Server using:
 ```properties
 spring.application.name=ms-credit-service
 spring.config.import=optional:configserver:http://localhost:8888
+```
+for properties
+```yaml
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: ms-credit-service
+
+server:
+  port: 8093
+
+application:
+  config:
+    customer-service-url: http://localhost:8090/api/v1/customers
 ```
 
 ## Swagger
