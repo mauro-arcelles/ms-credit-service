@@ -22,13 +22,16 @@ public class CreditMapper {
         credit.setCustomerId(request.getCustomerId());
         credit.setInterestRate(request.getInterestRate());
         credit.setAmountPaid(new BigDecimal(0));
+        credit.setIdentifier(Credit.generateCreditIdentifier());
         // Calculate total payment using: amount * (1 + interest_rate/100)
         // then calculate monthly payment using: totalPayment / term_months
         BigDecimal totalAmountToPay = request.getAmount()
                 .multiply(BigDecimal.ONE.add(request.getInterestRate().divide(new BigDecimal(100), 10, RoundingMode.HALF_UP)));
         BigDecimal monthlyPayment = totalAmountToPay.divide(new BigDecimal(request.getTermInMonths()), 2, RoundingMode.HALF_UP);
+
         totalAmountToPay = totalAmountToPay.setScale(2, RoundingMode.HALF_UP);
         credit.setTotalAmount(totalAmountToPay);
+
         monthlyPayment = monthlyPayment.setScale(2, RoundingMode.HALF_UP);
         credit.setMonthlyPayment(monthlyPayment);
         return credit;
@@ -44,6 +47,7 @@ public class CreditMapper {
         creditResponse.setClientId(credit.getCustomerId());
         creditResponse.setAmountPaid(credit.getAmountPaid());
         creditResponse.setTotalAmount(credit.getTotalAmount());
+        creditResponse.setIdentifier(credit.getIdentifier());
         return creditResponse;
     }
 

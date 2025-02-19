@@ -255,6 +255,8 @@ components:
           type: number
         totalAmount:
           type: number
+        identifier:
+          type: string
 
     CreditCardCreateRequest:
       type: object
