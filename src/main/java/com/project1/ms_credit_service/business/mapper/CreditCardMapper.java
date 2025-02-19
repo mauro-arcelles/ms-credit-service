@@ -1,4 +1,4 @@
-package com.project1.ms_credit_service.business;
+package com.project1.ms_credit_service.business.mapper;
 
 import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.model.CreditCardCreateRequest;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.Random;
 
 @Component
 public class CreditCardMapper {

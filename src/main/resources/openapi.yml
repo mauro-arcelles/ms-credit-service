@@ -32,6 +32,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseBase'
 
+  /credits/credit/by-customer/{customerId}:
+    get:
+      operationId: getCreditsByCustomerId
+      summary: Get all credits by customer id
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of credits
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
   /credits/credit/{id}:
     get:
       operationId: getCreditById

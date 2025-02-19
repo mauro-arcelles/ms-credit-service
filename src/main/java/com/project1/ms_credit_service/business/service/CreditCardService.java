@@ -1,4 +1,4 @@
-package com.project1.ms_credit_service.business;
+package com.project1.ms_credit_service.business.service;
 
 import com.project1.ms_credit_service.model.CreditCardCreateRequest;
 import com.project1.ms_credit_service.model.CreditCardResponse;

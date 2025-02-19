@@ -1,4 +1,4 @@
-package com.project1.ms_credit_service.business;
+package com.project1.ms_credit_service.business.mapper;
 
 import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.model.CreditCreateRequest;

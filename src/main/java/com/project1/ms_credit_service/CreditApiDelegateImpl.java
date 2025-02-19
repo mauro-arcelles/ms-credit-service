@@ -1,8 +1,8 @@
 package com.project1.ms_credit_service;
 
 import com.project1.ms_credit_service.api.CreditsApiDelegate;
-import com.project1.ms_credit_service.business.CreditCardService;
-import com.project1.ms_credit_service.business.CreditService;
+import com.project1.ms_credit_service.business.service.CreditCardService;
+import com.project1.ms_credit_service.business.service.CreditService;
 import com.project1.ms_credit_service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,5 +60,10 @@ public class CreditApiDelegateImpl implements CreditsApiDelegate {
     public Mono<ResponseEntity<CreditResponse>> updateCreditById(String id, Mono<CreditPatchRequest> creditPatchRequest, ServerWebExchange exchange) {
         return creditService.updateCreditById(id, creditPatchRequest)
                 .map(ResponseEntity::ok);
+    }
+
+    @Override
+    public Mono<ResponseEntity<Flux<CreditResponse>>> getCreditsByCustomerId(String customerId, ServerWebExchange exchange) {
+        return Mono.just(ResponseEntity.ok(creditService.getCreditsByCustomerId(customerId)));
     }
 }

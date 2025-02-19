@@ -1,12 +1,13 @@
-package com.project1.ms_credit_service.business;
+package com.project1.ms_credit_service.business.service;
 
+import com.project1.ms_credit_service.business.mapper.CreditMapper;
 import com.project1.ms_credit_service.business.adapter.CustomerService;
 import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.model.*;
-import com.project1.ms_credit_service.model.entity.Credit;
 import com.project1.ms_credit_service.repository.CreditRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -47,6 +48,13 @@ public class CreditServiceImpl implements CreditService {
                         request.map(req -> creditMapper.getCreditUpdateEntity(req, credit))
                 )
                 .flatMap(creditRepository::save)
+                .map(creditMapper::getCreditResponse);
+    }
+
+    @Override
+    public Flux<CreditResponse> getCreditsByCustomerId(String customerId) {
+        return customerService.getCustomerById(customerId)
+                .flatMapMany(customer -> creditRepository.findByCustomerId(customerId))
                 .map(creditMapper::getCreditResponse);
     }
 

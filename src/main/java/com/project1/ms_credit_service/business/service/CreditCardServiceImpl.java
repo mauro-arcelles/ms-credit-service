@@ -1,5 +1,6 @@
-package com.project1.ms_credit_service.business;
+package com.project1.ms_credit_service.business.service;
 
+import com.project1.ms_credit_service.business.mapper.CreditCardMapper;
 import com.project1.ms_credit_service.business.adapter.CustomerService;
 import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.exception.CreditCardNotFoundException;
