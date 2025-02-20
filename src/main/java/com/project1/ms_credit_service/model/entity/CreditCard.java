@@ -18,17 +18,23 @@ import java.util.Random;
 public class CreditCard {
     @Id
     private String id;
+
     private String customerId;
+
     private String cardNumber;
+
     private CreditCardType creditCardType;
+
     private BigDecimal creditLimit;
+
     private BigDecimal usedAmount;
+
     private CreditCardStatus creditCardStatus;
 
     public static String generateCardNumber() {
         Random random = new Random();
         StringBuilder number = new StringBuilder("4");
-        for(int i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i++) {
             number.append(random.nextInt(10));
         }
         return number.toString();

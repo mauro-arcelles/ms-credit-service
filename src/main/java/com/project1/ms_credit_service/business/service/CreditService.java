@@ -8,7 +8,10 @@ import reactor.core.publisher.Mono;
 
 public interface CreditService {
     Mono<CreditResponse> createCredit(Mono<CreditCreateRequest> request);
+
     Mono<CreditResponse> getCreditById(String id);
+
     Mono<CreditResponse> updateCreditById(String id, Mono<CreditPatchRequest> request);
+
     Flux<CreditResponse> getCreditsByCustomerId(String customerId);
 }

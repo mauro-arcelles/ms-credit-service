@@ -18,14 +18,23 @@ import java.util.UUID;
 public class Credit {
     @Id
     private String id;
+
     private String identifier;
+
     private String customerId;
+
     private BigDecimal amount;
+
     private CreditStatus status;
+
     private BigDecimal interestRate;
+
     private Integer termInMonths;
+
     private BigDecimal monthlyPayment;
+
     private BigDecimal amountPaid;
+
     private BigDecimal totalAmount;
 
     public static String generateCreditIdentifier() {

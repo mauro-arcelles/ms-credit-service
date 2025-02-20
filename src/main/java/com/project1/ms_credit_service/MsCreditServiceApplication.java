@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MsCreditServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MsCreditServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MsCreditServiceApplication.class, args);
+    }
 
 }
