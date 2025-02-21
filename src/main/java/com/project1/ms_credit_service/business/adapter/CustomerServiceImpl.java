@@ -1,8 +1,11 @@
 package com.project1.ms_credit_service.business.adapter;
 
+import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.exception.CustomerNotFoundException;
 import com.project1.ms_credit_service.model.CustomerResponse;
 import com.project1.ms_credit_service.model.ResponseBase;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private WebClient webClient;
 
+    @CircuitBreaker(name = "customerService", fallbackMethod = "getCustomerByIdFallback")
+    @TimeLimiter(name = "customerService")
     @Override
     public Mono<CustomerResponse> getCustomerById(String id) {
         return webClient.get()
@@ -24,5 +29,9 @@ public class CustomerServiceImpl implements CustomerService {
                         response.bodyToMono(ResponseBase.class)
                                 .flatMap(error -> Mono.error(new CustomerNotFoundException(error.getMessage()))))
                 .bodyToMono(CustomerResponse.class);
+    }
+
+    private Mono<CustomerResponse> getCustomerByIdFallback(String id, Exception e) {
+        return Mono.error(new BadRequestException("Customer service unavailable. Retry again later"));
     }
 }
