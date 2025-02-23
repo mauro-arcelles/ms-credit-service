@@ -215,6 +215,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseBase'
 
+  /credits/credit-card/{creditCardId}:
+    get:
+      operationId: getCreditCardById
+      summary: Get a credit card by its id
+      parameters:
+        - name: creditCardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Credit card found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardResponse'
+        '404':
+          description: Credit card not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
 components:
   schemas:
     CreditCreateRequest:

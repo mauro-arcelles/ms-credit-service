@@ -14,4 +14,6 @@ public interface CreditCardService {
     Mono<CreditCardResponse> updateCreditCard(String id, Mono<CreditCardPatchRequest> request);
 
     Flux<CreditCardResponse> getCreditCardsByCustomerId(String customerId);
+
+    Mono<CreditCardResponse> getCreditCardById(String creditCardId);
 }

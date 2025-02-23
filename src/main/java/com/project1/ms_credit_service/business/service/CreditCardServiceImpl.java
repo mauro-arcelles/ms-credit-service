@@ -30,42 +30,49 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public Mono<CreditCardResponse> createCreditCard(Mono<CreditCardCreateRequest> request) {
         return request
-                .flatMap(req ->
-                        this.validateCustomerAvailability(req)
-                                .map(customer -> creditCardMapper.getCreditCardCreationEntity(req, customer.getType()))
-                )
-                .flatMap(creditCardRepository::save)
-                .map(creditCardMapper::getCreditCardResponse);
+            .flatMap(req ->
+                this.validateCustomerAvailability(req)
+                    .map(customer -> creditCardMapper.getCreditCardCreationEntity(req, customer.getType()))
+            )
+            .flatMap(creditCardRepository::save)
+            .map(creditCardMapper::getCreditCardResponse);
     }
 
     private Mono<CustomerResponse> validateCustomerAvailability(CreditCardCreateRequest request) {
         return customerService.getCustomerById(request.getCustomerId())
-                .filter(customerResponse -> CustomerStatus.ACTIVE.toString().equals(customerResponse.getStatus()))
-                .switchIfEmpty(Mono.error(new BadRequestException("Customer has INACTIVE status")));
+            .filter(customerResponse -> CustomerStatus.ACTIVE.toString().equals(customerResponse.getStatus()))
+            .switchIfEmpty(Mono.error(new BadRequestException("Customer has INACTIVE status")));
     }
 
     @Override
     public Mono<CreditCardResponse> getCreditCardByCardNumber(String cardNumber) {
         return creditCardRepository.findByCardNumber(cardNumber)
-                .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with card number: " + cardNumber)))
-                .map(creditCardMapper::getCreditCardResponse);
+            .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with card number: " + cardNumber)))
+            .map(creditCardMapper::getCreditCardResponse);
     }
 
     @Override
     public Mono<CreditCardResponse> updateCreditCard(String id, Mono<CreditCardPatchRequest> request) {
         return creditCardRepository.findById(id)
-                .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with id: " + id)))
-                .flatMap(creditCard ->
-                        request.map(req -> creditCardMapper.getCreditCardUpdateEntity(req, creditCard))
-                )
-                .flatMap(creditCardRepository::save)
-                .map(creditCardMapper::getCreditCardResponse);
+            .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with id: " + id)))
+            .flatMap(creditCard ->
+                request.map(req -> creditCardMapper.getCreditCardUpdateEntity(req, creditCard))
+            )
+            .flatMap(creditCardRepository::save)
+            .map(creditCardMapper::getCreditCardResponse);
     }
 
     @Override
     public Flux<CreditCardResponse> getCreditCardsByCustomerId(String customerId) {
         return creditCardRepository.findByCustomerId(customerId)
-                .map(creditCardMapper::getCreditCardResponse);
+            .map(creditCardMapper::getCreditCardResponse);
+    }
+
+    @Override
+    public Mono<CreditCardResponse> getCreditCardById(String creditCardId) {
+        return creditCardRepository.findById(creditCardId)
+            .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with id: " + creditCardId)))
+            .map(creditCardMapper::getCreditCardResponse);
     }
 
 }

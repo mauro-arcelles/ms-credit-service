@@ -40,6 +40,12 @@ public class CreditApiDelegateImpl implements CreditsApiDelegate {
     }
 
     @Override
+    public Mono<ResponseEntity<CreditCardResponse>> getCreditCardById(String creditCardId, ServerWebExchange exchange) {
+        return creditCardService.getCreditCardById(creditCardId)
+            .map(ResponseEntity::ok);
+    }
+
+    @Override
     public Mono<ResponseEntity<CreditCardResponse>> updateCreditCard(String id, Mono<CreditCardPatchRequest> patchCreditCardRequest,
                                                                      ServerWebExchange exchange) {
         return creditCardService.updateCreditCard(id, patchCreditCardRequest)
