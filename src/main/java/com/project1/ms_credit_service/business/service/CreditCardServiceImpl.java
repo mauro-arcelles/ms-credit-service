@@ -1,12 +1,12 @@
 package com.project1.ms_credit_service.business.service;
 
-import com.project1.ms_credit_service.business.mapper.CreditCardMapper;
 import com.project1.ms_credit_service.business.adapter.CustomerService;
+import com.project1.ms_credit_service.business.mapper.CreditCardMapper;
 import com.project1.ms_credit_service.exception.BadRequestException;
-import com.project1.ms_credit_service.exception.CreditCardNotFoundException;
+import com.project1.ms_credit_service.exception.NotFoundException;
 import com.project1.ms_credit_service.model.CreditCardCreateRequest;
-import com.project1.ms_credit_service.model.CreditCardResponse;
 import com.project1.ms_credit_service.model.CreditCardPatchRequest;
+import com.project1.ms_credit_service.model.CreditCardResponse;
 import com.project1.ms_credit_service.model.CustomerResponse;
 import com.project1.ms_credit_service.model.entity.CustomerStatus;
 import com.project1.ms_credit_service.repository.CreditCardRepository;
@@ -47,14 +47,14 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public Mono<CreditCardResponse> getCreditCardByCardNumber(String cardNumber) {
         return creditCardRepository.findByCardNumber(cardNumber)
-            .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with card number: " + cardNumber)))
+            .switchIfEmpty(Mono.error(new NotFoundException("Credit card not found with card number: " + cardNumber)))
             .map(creditCardMapper::getCreditCardResponse);
     }
 
     @Override
     public Mono<CreditCardResponse> updateCreditCard(String id, Mono<CreditCardPatchRequest> request) {
         return creditCardRepository.findById(id)
-            .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with id: " + id)))
+            .switchIfEmpty(Mono.error(new NotFoundException("Credit card not found with id: " + id)))
             .flatMap(creditCard ->
                 request.map(req -> creditCardMapper.getCreditCardUpdateEntity(req, creditCard))
             )
@@ -71,7 +71,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public Mono<CreditCardResponse> getCreditCardById(String creditCardId) {
         return creditCardRepository.findById(creditCardId)
-            .switchIfEmpty(Mono.error(new CreditCardNotFoundException("Credit card not found with id: " + creditCardId)))
+            .switchIfEmpty(Mono.error(new NotFoundException("Credit card not found with id: " + creditCardId)))
             .map(creditCardMapper::getCreditCardResponse);
     }
 

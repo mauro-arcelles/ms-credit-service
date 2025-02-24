@@ -39,14 +39,6 @@ public class GlobalExceptionHandler {
                 .body("Internal Server Error"));
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public Mono<ResponseEntity<ResponseBase>> handleCustomerNotFoundException(Exception ex) {
-        ResponseBase responseBase = new ResponseBase();
-        responseBase.setMessage(ex.getMessage());
-        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(responseBase));
-    }
-
     @ExceptionHandler(InvalidAccountTypeException.class)
     public Mono<ResponseEntity<ResponseBase>> handleInvalidAccountTypeException(Exception ex) {
         ResponseBase responseBase = new ResponseBase();
@@ -55,12 +47,12 @@ public class GlobalExceptionHandler {
                 .body(responseBase));
     }
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    public Mono<ResponseEntity<ResponseBase>> handleAccountNotFoundException(Exception ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public Mono<ResponseEntity<ResponseBase>> handleNotFoundException(Exception ex) {
         ResponseBase responseBase = new ResponseBase();
         responseBase.setMessage(ex.getMessage());
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(responseBase));
+            .body(responseBase));
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -68,14 +60,6 @@ public class GlobalExceptionHandler {
         ResponseBase responseBase = new ResponseBase();
         responseBase.setMessage(ex.getMessage());
         return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(responseBase));
-    }
-
-    @ExceptionHandler(CreditCardNotFoundException.class)
-    public Mono<ResponseEntity<ResponseBase>> handleCreditCardNotFoundException(Exception ex) {
-        ResponseBase responseBase = new ResponseBase();
-        responseBase.setMessage(ex.getMessage());
-        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(responseBase));
     }
 
