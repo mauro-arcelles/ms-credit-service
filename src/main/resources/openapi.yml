@@ -306,6 +306,9 @@ components:
       properties:
         amountPaid:
           type: number
+        status:
+          type: string
+          x-field-extra-annotation: '@com.project1.ms_credit_service.validation.EnumNamePattern(regexp = "ACTIVE|PAID")'
       required:
         - amountPaid
 

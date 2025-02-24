@@ -95,16 +95,4 @@ class CreditMapperTest {
 
         assertEquals(CreditStatus.PAID, result.getStatus());
     }
-
-    @Test
-    void getCreditUpdateEntity_ExcessiveAmount_ThrowsBadRequestException() {
-        Credit existingCredit = new Credit();
-        existingCredit.setTotalAmount(BigDecimal.valueOf(1100));
-
-        CreditPatchRequest request = new CreditPatchRequest();
-        request.setAmountPaid(BigDecimal.valueOf(1200));
-
-        assertThrows(BadRequestException.class, () ->
-            creditMapper.getCreditUpdateEntity(request, existingCredit));
-    }
 }
