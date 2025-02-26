@@ -2,6 +2,7 @@ package com.project1.ms_credit_service;
 
 import com.project1.ms_credit_service.api.CreditsApiDelegate;
 import com.project1.ms_credit_service.business.service.CreditCardService;
+import com.project1.ms_credit_service.business.service.CreditDebtsValidationService;
 import com.project1.ms_credit_service.business.service.CreditService;
 import com.project1.ms_credit_service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class CreditApiDelegateImpl implements CreditsApiDelegate {
 
     @Autowired
     private CreditCardService creditCardService;
+
+    @Autowired
+    private CreditDebtsValidationService debtsValidationService;
 
     @Override
     public Mono<ResponseEntity<CreditResponse>> createCredit(Mono<CreditCreateRequest> createCreditRequest, ServerWebExchange exchange) {
@@ -72,5 +76,10 @@ public class CreditApiDelegateImpl implements CreditsApiDelegate {
     @Override
     public Mono<ResponseEntity<Flux<CreditResponse>>> getCreditsByCustomerId(String customerId, ServerWebExchange exchange) {
         return Mono.just(ResponseEntity.ok(creditService.getCreditsByCustomerId(customerId)));
+    }
+
+    @Override
+    public Mono<ResponseEntity<CreditDebtsResponse>> validateDebts(String customerId, ServerWebExchange exchange) {
+        return debtsValidationService.getCreditDebtsByCustomerId(customerId).map(ResponseEntity::ok);
     }
 }

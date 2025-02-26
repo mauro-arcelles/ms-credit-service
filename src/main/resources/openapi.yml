@@ -8,6 +8,30 @@ servers:
   - url: http://localhost/api/v1
 
 paths:
+  /credits/validate-debts/{customerId}:
+    get:
+      operationId: validateDebts
+      summary: Validate customer debts by customer id
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Debts validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditDebtsResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBase'
+
   /credits/credit:
     post:
       operationId: createCredit
@@ -241,6 +265,21 @@ paths:
 
 components:
   schemas:
+    CreditDebtsResponse:
+      type: object
+      properties:
+        debts:
+          type: object
+          properties:
+            credits:
+              type: array
+              items:
+                type: string
+            credit-cards:
+              type: array
+              items:
+                type: string
+
     CreditCreateRequest:
       type: object
       properties:
