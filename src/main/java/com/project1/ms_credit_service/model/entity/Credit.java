@@ -42,6 +42,8 @@ public class Credit {
 
     private BigDecimal expectedPaymentToDate;
 
+    private LocalDateTime creationDate;
+
     public static String generateCreditIdentifier() {
         return UUID.randomUUID().toString();
     }

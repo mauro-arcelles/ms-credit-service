@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Document(collection = "credit-cards")
@@ -32,6 +33,8 @@ public class CreditCard {
     private CreditCardStatus creditCardStatus;
 
     private Integer monthlyPaymentDay;
+
+    private LocalDateTime creationDate;
 
     public static String generateCardNumber() {
         Random random = new Random();

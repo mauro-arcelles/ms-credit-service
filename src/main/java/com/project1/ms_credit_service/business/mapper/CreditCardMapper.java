@@ -7,10 +7,13 @@ import com.project1.ms_credit_service.model.CreditCardResponse;
 import com.project1.ms_credit_service.model.entity.CreditCard;
 import com.project1.ms_credit_service.model.entity.CreditCardStatus;
 import com.project1.ms_credit_service.model.entity.CreditCardType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component
@@ -19,16 +22,20 @@ public class CreditCardMapper {
     @Value("${application.config.credits.credit-cards.monthlyPaymentDay}")
     private Integer monthlyPaymentDay;
 
+    @Autowired
+    private Clock clock;
+
     public CreditCard getCreditCardCreationEntity(CreditCardCreateRequest request, String creditCardType) {
-        CreditCard creditCard = new CreditCard();
-        creditCard.setCardNumber(CreditCard.generateCardNumber());
-        creditCard.setCreditLimit(request.getCreditLimit());
-        creditCard.setCreditCardStatus(CreditCardStatus.ACTIVE);
-        creditCard.setCreditCardType(CreditCardType.valueOf(creditCardType));
-        creditCard.setCustomerId(request.getCustomerId());
-        creditCard.setUsedAmount(BigDecimal.valueOf(0));
-        creditCard.setMonthlyPaymentDay(monthlyPaymentDay);
-        return creditCard;
+        return CreditCard.builder()
+            .cardNumber(CreditCard.generateCardNumber())
+            .creditLimit(request.getCreditLimit())
+            .creditCardStatus(CreditCardStatus.ACTIVE)
+            .creditCardType(CreditCardType.valueOf(creditCardType))
+            .customerId(request.getCustomerId())
+            .usedAmount(BigDecimal.ZERO)
+            .monthlyPaymentDay(monthlyPaymentDay)
+            .creationDate(LocalDateTime.now(clock))
+            .build();
     }
 
     public CreditCard getCreditCardUpdateEntity(CreditCardPatchRequest request, CreditCard existingCard) {

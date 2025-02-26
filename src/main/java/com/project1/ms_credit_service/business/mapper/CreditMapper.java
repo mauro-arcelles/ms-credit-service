@@ -6,14 +6,20 @@ import com.project1.ms_credit_service.model.CreditPatchRequest;
 import com.project1.ms_credit_service.model.CreditResponse;
 import com.project1.ms_credit_service.model.entity.Credit;
 import com.project1.ms_credit_service.model.entity.CreditStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Clock;
+import java.time.LocalDateTime;
 
 @Component
 public class CreditMapper {
+
+    @Autowired
+    private Clock clock;
 
     public Credit getCreditCreationEntity(CreditCreateRequest request) {
         return Credit.builder()
@@ -27,6 +33,7 @@ public class CreditMapper {
             .totalAmount(calculateTotalAmount(request))
             .monthlyPayment(calculateMonthlyPayment(request))
             .expectedPaymentToDate(calculateMonthlyPayment(request))
+            .creationDate(LocalDateTime.now(clock))
             .build();
     }
 
