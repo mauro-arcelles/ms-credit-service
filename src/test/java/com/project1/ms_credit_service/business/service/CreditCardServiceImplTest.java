@@ -9,6 +9,7 @@ import com.project1.ms_credit_service.model.CreditCardPatchRequest;
 import com.project1.ms_credit_service.model.CreditCardResponse;
 import com.project1.ms_credit_service.model.CustomerResponse;
 import com.project1.ms_credit_service.model.entity.CreditCard;
+import com.project1.ms_credit_service.model.entity.CustomerStatus;
 import com.project1.ms_credit_service.repository.CreditCardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +36,16 @@ class CreditCardServiceImplTest {
     @Autowired
     private CreditCardServiceImpl creditCardService;
 
+    @MockBean
+    private CreditDebtsValidationService debtsValidationService;
+
     @Test
     void createCreditCard_ActiveCustomer_Success() {
         CreditCardCreateRequest createRequest = new CreditCardCreateRequest();
         createRequest.setCustomerId("123");
 
         CustomerResponse customer = new CustomerResponse();
-        customer.setStatus("ACTIVE");
+        customer.setStatus(CustomerStatus.ACTIVE.toString());
         customer.setType("PERSONAL");
 
         CreditCard creditCard = new CreditCard();
@@ -51,6 +55,7 @@ class CreditCardServiceImplTest {
         when(creditCardMapper.getCreditCardCreationEntity(createRequest, "PERSONAL")).thenReturn(creditCard);
         when(creditCardRepository.save(creditCard)).thenReturn(Mono.just(creditCard));
         when(creditCardMapper.getCreditCardResponse(creditCard)).thenReturn(expectedResponse);
+        when(debtsValidationService.validateAllDebts(customer)).thenReturn(Mono.just(customer));
 
         StepVerifier.create(creditCardService.createCreditCard(Mono.just(createRequest)))
             .expectNext(expectedResponse)
@@ -63,7 +68,7 @@ class CreditCardServiceImplTest {
         createRequest.setCustomerId("123");
 
         CustomerResponse customer = new CustomerResponse();
-        customer.setStatus("INACTIVE");
+        customer.setStatus(CustomerStatus.INACTIVE.toString());
 
         when(customerService.getCustomerById("123")).thenReturn(Mono.just(customer));
 

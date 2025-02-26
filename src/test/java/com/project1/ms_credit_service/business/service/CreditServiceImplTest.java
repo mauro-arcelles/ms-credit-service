@@ -31,6 +31,9 @@ class CreditServiceImplTest {
     @MockBean
     private CustomerService customerService;
 
+    @MockBean
+    private CreditDebtsValidationService debtsValidationService;
+
     @Autowired
     private CreditServiceImpl creditService;
 
@@ -50,6 +53,7 @@ class CreditServiceImplTest {
         when(creditMapper.getCreditCreationEntity(createRequest)).thenReturn(credit);
         when(creditRepository.save(credit)).thenReturn(Mono.just(credit));
         when(creditMapper.getCreditResponse(credit)).thenReturn(expectedResponse);
+        when(debtsValidationService.validateAllDebts(customer)).thenReturn(Mono.just(customer));
 
         StepVerifier.create(creditService.createCredit(Mono.just(createRequest)))
             .expectNext(expectedResponse)
@@ -112,6 +116,7 @@ class CreditServiceImplTest {
         when(creditMapper.getCreditCreationEntity(createRequest)).thenReturn(credit);
         when(creditRepository.save(credit)).thenReturn(Mono.just(credit));
         when(creditMapper.getCreditResponse(credit)).thenReturn(expectedResponse);
+        when(debtsValidationService.validateAllDebts(customer)).thenReturn(Mono.just(customer));
 
         StepVerifier.create(creditService.createCredit(Mono.just(createRequest)))
             .expectNext(expectedResponse)

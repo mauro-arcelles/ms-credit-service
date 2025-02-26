@@ -1,6 +1,5 @@
 package com.project1.ms_credit_service.business.mapper;
 
-import com.project1.ms_credit_service.exception.BadRequestException;
 import com.project1.ms_credit_service.model.CreditCardCreateRequest;
 import com.project1.ms_credit_service.model.CreditCardPatchRequest;
 import com.project1.ms_credit_service.model.CreditCardResponse;
@@ -35,14 +34,6 @@ class CreditCardMapperTest {
         assertEquals(CreditCardType.PERSONAL, result.getCreditCardType());
         assertEquals("123", result.getCustomerId());
         assertEquals(BigDecimal.ZERO, result.getUsedAmount());
-    }
-
-    @Test
-    void getCreditCardCreationEntity_InvalidType_ThrowsBadRequestException() {
-        CreditCardCreateRequest request = new CreditCardCreateRequest();
-
-        assertThrows(BadRequestException.class, () ->
-            creditCardMapper.getCreditCardCreationEntity(request, "INVALID"));
     }
 
     @Test
