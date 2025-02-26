@@ -25,13 +25,20 @@ public class CreditCardServiceImpl implements CreditCardService {
     private CustomerService customerService;
 
     @Autowired
+    private CreditService creditService;
+
+    @Autowired
     private CreditCardMapper creditCardMapper;
+
+    @Autowired
+    private CreditDebtsValidationService debtsValidationService;
 
     @Override
     public Mono<CreditCardResponse> createCreditCard(Mono<CreditCardCreateRequest> request) {
         return request
             .flatMap(req ->
                 this.validateCustomerAvailability(req)
+                    .flatMap(debtsValidationService::validateAllDebts)
                     .map(customer -> creditCardMapper.getCreditCardCreationEntity(req, customer.getType()))
             )
             .flatMap(creditCardRepository::save)

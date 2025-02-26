@@ -7,6 +7,7 @@ import com.project1.ms_credit_service.model.CreditCardResponse;
 import com.project1.ms_credit_service.model.entity.CreditCard;
 import com.project1.ms_credit_service.model.entity.CreditCardStatus;
 import com.project1.ms_credit_service.model.entity.CreditCardType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,17 +16,18 @@ import java.util.Optional;
 @Component
 public class CreditCardMapper {
 
+    @Value("${application.config.credits.credit-cards.monthlyPaymentDay}")
+    private Integer monthlyPaymentDay;
+
     public CreditCard getCreditCardCreationEntity(CreditCardCreateRequest request, String creditCardType) {
         CreditCard creditCard = new CreditCard();
         creditCard.setCardNumber(CreditCard.generateCardNumber());
         creditCard.setCreditLimit(request.getCreditLimit());
         creditCard.setCreditCardStatus(CreditCardStatus.ACTIVE);
-        if (!isValidCreditCardType(creditCardType)) {
-            throw new BadRequestException("Invalid credit card type. Should be one of: PERSONAL|BUSINESS");
-        }
         creditCard.setCreditCardType(CreditCardType.valueOf(creditCardType));
         creditCard.setCustomerId(request.getCustomerId());
         creditCard.setUsedAmount(BigDecimal.valueOf(0));
+        creditCard.setMonthlyPaymentDay(monthlyPaymentDay);
         return creditCard;
     }
 
@@ -44,14 +46,5 @@ public class CreditCardMapper {
         creditCardResponse.setCustomerId(creditCard.getCustomerId());
         creditCardResponse.setUsedAmount(creditCard.getUsedAmount());
         return creditCardResponse;
-    }
-
-    private boolean isValidCreditCardType(String creditCardType) {
-        try {
-            CreditCardType.valueOf(creditCardType);
-            return true;
-        } catch (IllegalArgumentException ex) {
-            return false;
-        }
     }
 }

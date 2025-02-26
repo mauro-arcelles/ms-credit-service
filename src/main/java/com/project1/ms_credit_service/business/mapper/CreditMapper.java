@@ -6,6 +6,7 @@ import com.project1.ms_credit_service.model.CreditPatchRequest;
 import com.project1.ms_credit_service.model.CreditResponse;
 import com.project1.ms_credit_service.model.entity.Credit;
 import com.project1.ms_credit_service.model.entity.CreditStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,26 +16,40 @@ import java.math.RoundingMode;
 public class CreditMapper {
 
     public Credit getCreditCreationEntity(CreditCreateRequest request) {
-        Credit credit = new Credit();
-        credit.setAmount(request.getAmount());
-        credit.setStatus(CreditStatus.ACTIVE);
-        credit.setTermInMonths(request.getTermInMonths());
-        credit.setCustomerId(request.getCustomerId());
-        credit.setInterestRate(request.getInterestRate());
-        credit.setAmountPaid(new BigDecimal(0));
-        credit.setIdentifier(Credit.generateCreditIdentifier());
-        // Calculate total payment using: amount * (1 + interest_rate/100)
-        // then calculate monthly payment using: totalPayment / term_months
-        BigDecimal totalAmountToPay = request.getAmount()
-                .multiply(BigDecimal.ONE.add(request.getInterestRate().divide(new BigDecimal(100), 10, RoundingMode.HALF_UP)));
-        BigDecimal monthlyPayment = totalAmountToPay.divide(new BigDecimal(request.getTermInMonths()), 2, RoundingMode.HALF_UP);
+        return Credit.builder()
+            .amount(request.getAmount())
+            .status(CreditStatus.ACTIVE)
+            .termInMonths(request.getTermInMonths())
+            .customerId(request.getCustomerId())
+            .interestRate(request.getInterestRate())
+            .amountPaid(BigDecimal.ZERO)
+            .identifier(Credit.generateCreditIdentifier())
+            .totalAmount(calculateTotalAmount(request))
+            .monthlyPayment(calculateMonthlyPayment(request))
+            .expectedPaymentToDate(calculateMonthlyPayment(request))
+            .build();
+    }
 
-        totalAmountToPay = totalAmountToPay.setScale(2, RoundingMode.HALF_UP);
-        credit.setTotalAmount(totalAmountToPay);
+    /**
+     * Calculates total amount to pay including interest
+     * @param request Credit request containing amount and interest rate
+     * @return Total amount with interest, scaled to 2 decimal places
+     */
+    private BigDecimal calculateTotalAmount(CreditCreateRequest request) {
+        return request.getAmount()
+            .multiply(BigDecimal.ONE.add(
+                request.getInterestRate().divide(new BigDecimal(100), 10, RoundingMode.HALF_UP)))
+            .setScale(2, RoundingMode.HALF_UP);
+    }
 
-        monthlyPayment = monthlyPayment.setScale(2, RoundingMode.HALF_UP);
-        credit.setMonthlyPayment(monthlyPayment);
-        return credit;
+    /**
+     * Calculates monthly payment amount
+     * @param request Credit request containing term in months
+     * @return Monthly payment amount, scaled to 2 decimal places
+     */
+    private BigDecimal calculateMonthlyPayment(CreditCreateRequest request) {
+        return calculateTotalAmount(request)
+            .divide(new BigDecimal(request.getTermInMonths()), 2, RoundingMode.HALF_UP);
     }
 
     public CreditResponse getCreditResponse(Credit credit) {

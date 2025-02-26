@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Document(collection = "credits")
@@ -36,6 +37,10 @@ public class Credit {
     private BigDecimal amountPaid;
 
     private BigDecimal totalAmount;
+
+    private LocalDateTime nextPaymentDueDate;
+
+    private BigDecimal expectedPaymentToDate;
 
     public static String generateCreditIdentifier() {
         return UUID.randomUUID().toString();

@@ -31,6 +31,8 @@ public class CreditCard {
 
     private CreditCardStatus creditCardStatus;
 
+    private Integer monthlyPaymentDay;
+
     public static String generateCardNumber() {
         Random random = new Random();
         StringBuilder number = new StringBuilder("4");
