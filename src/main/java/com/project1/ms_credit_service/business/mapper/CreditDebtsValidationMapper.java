@@ -27,7 +27,19 @@ public class CreditDebtsValidationMapper {
         responseDebts.setCredits(creditIds);
         responseDebts.setCreditCards(creditCardIds);
 
+        String message = "";
+        if (!creditIds.isEmpty()) {
+            message = "Cannot create. CUSTOMER has debt on one of his credits";
+        }
+        if (!creditCardIds.isEmpty()) {
+            message = "Cannot create. CUSTOMER has debt on one of his credit cards";
+        }
+        if (!creditIds.isEmpty() && !creditCardIds.isEmpty()) {
+            message = "Cannot create. CUSTOMER has debts";
+        }
+
         response.setDebts(responseDebts);
+        response.setMessage(message);
         return response;
     }
 }

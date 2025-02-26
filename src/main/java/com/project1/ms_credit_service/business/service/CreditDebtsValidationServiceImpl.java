@@ -63,7 +63,7 @@ public class CreditDebtsValidationServiceImpl implements CreditDebtsValidationSe
             .hasElements()
             .flatMap(hasDebts -> {
                 if (hasDebts) {
-                    return Mono.error(new BadRequestException("Cannot create CREDIT. CUSTOMER has debt on one of his credits"));
+                    return Mono.error(new BadRequestException("Cannot create. CUSTOMER has debt on one of his credits"));
                 } else {
                     return Mono.just(customer);
                 }
