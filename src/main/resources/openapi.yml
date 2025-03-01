@@ -322,6 +322,11 @@ components:
           type: number
         identifier:
           type: string
+        nextPaymentDueDate:
+          type: string
+          format: date-time
+        expectedPaymentToDate:
+          type: number
 
     CreditCardCreateRequest:
       type: object
@@ -350,6 +355,11 @@ components:
         status:
           type: string
           x-field-extra-annotation: '@com.project1.ms_credit_service.validation.EnumNamePattern(regexp = "ACTIVE|PAID")'
+        nextPaymentDueDate:
+          type: string
+          format: date-time
+        expectedPaymentToDate:
+          type: number
       required:
         - amountPaid
 

@@ -70,6 +70,8 @@ public class CreditMapper {
         creditResponse.setAmountPaid(credit.getAmountPaid());
         creditResponse.setTotalAmount(credit.getTotalAmount());
         creditResponse.setIdentifier(credit.getIdentifier());
+        creditResponse.setNextPaymentDueDate(credit.getNextPaymentDueDate());
+        creditResponse.setExpectedPaymentToDate(credit.getExpectedPaymentToDate());
         return creditResponse;
     }
 
@@ -80,6 +82,12 @@ public class CreditMapper {
         existingCredit.setAmountPaid(request.getAmountPaid());
         if (request.getAmountPaid().setScale(0, RoundingMode.HALF_UP).compareTo(existingCredit.getTotalAmount().setScale(0, RoundingMode.HALF_UP)) == 0) {
             existingCredit.setStatus(CreditStatus.PAID);
+        }
+        if (request.getNextPaymentDueDate() != null) {
+            existingCredit.setNextPaymentDueDate(request.getNextPaymentDueDate());
+        }
+        if (request.getExpectedPaymentToDate() != null) {
+            existingCredit.setExpectedPaymentToDate(request.getExpectedPaymentToDate());
         }
         return existingCredit;
     }
