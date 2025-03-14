@@ -84,5 +84,6 @@ springdoc:
 ## Swagger
 http://localhost:8093/swagger-ui.html
 
-![ms-credit-service-2025-02-11-233656](https://github.com/user-attachments/assets/4241a5dd-c87a-413d-8444-9d10136dff06)
+![ms-credit-service-2025-03-14-155304](https://github.com/user-attachments/assets/d2303ba0-942a-42cc-8dcf-ae1984751ab8)
+
 
